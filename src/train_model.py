@@ -4,6 +4,7 @@ import json
 import boto3
 import pickle
 import requests
+import subprocess
 
 import numpy as np
 import pandas as pd
@@ -82,4 +83,8 @@ response = requests.post(endpoint, json=payload)
 response.raise_for_status()
 score = response.json()
 print("model score: {}".format(score))
+
+cmd = """curl -X POST -d "{\\"fvector\\": [3.613, 11.363, 11.136, 0.069, 0.554, 6.284, 68.574, 3.795, 9.549, 408.237, 18.455, 356.674, 12.653]}" https://btnhlt9bw0.execute-api.us-west-2.amazonaws.com/beta"""
+res = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
+float(res.stdout.decode('utf8'))
 
