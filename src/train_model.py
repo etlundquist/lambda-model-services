@@ -3,6 +3,7 @@ import sys
 import json
 import boto3
 import pickle
+import requests
 
 import numpy as np
 import pandas as pd
@@ -70,4 +71,15 @@ model = pickle.loads(body)
 payload = json.dumps({'fvector': [3.613, 11.363, 11.136, 0.069, 0.554, 6.284, 68.574, 3.795, 9.549, 408.237, 18.455, 356.674, 12.653]})
 fvector = np.array(json.loads(payload)['fvector']).reshape(1, -1)
 score = model.predict(fvector)[0]
+
+# call the model endpoint API with requests
+# -----------------------------------------
+
+endpoint = "https://btnhlt9bw0.execute-api.us-west-2.amazonaws.com/beta"
+payload = {'fvector': [3.613, 11.363, 11.136, 0.069, 0.554, 6.284, 68.574, 3.795, 9.549, 408.237, 18.455, 356.674, 12.653]}
+response = requests.post(endpoint, json=payload)
+
+response.raise_for_status()
+score = response.json()
+print("model score: {}".format(score))
 
